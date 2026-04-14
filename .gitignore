@@ -5,4 +5,5 @@ dist/
 .env
 .env.*
 *.pem
-*.key.claude/memory
+*.key
+.claude/
