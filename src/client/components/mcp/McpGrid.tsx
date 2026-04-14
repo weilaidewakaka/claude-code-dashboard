@@ -1,0 +1,27 @@
+import type { McpCatalogEntry } from "../../../shared/types";
+import { McpCatalogCard } from "./McpCatalogCard";
+
+type McpGridProps = {
+  entries: McpCatalogEntry[];
+};
+
+export const McpGrid = ({ entries }: McpGridProps) => {
+  if (entries.length === 0) {
+    return (
+      <div className="rounded-xl bg-[var(--surface-raised)] ring-1 ring-[var(--border-hairline)] p-8 text-center">
+        <p className="text-sm text-zinc-400">No MCP servers found.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
+      {entries.map((entry) => (
+        <McpCatalogCard
+          key={`${entry.origin}-${entry.name}`}
+          entry={entry}
+        />
+      ))}
+    </div>
+  );
+};

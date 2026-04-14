@@ -1,0 +1,15 @@
+{
+  "plansDirectory": ".claude/plans",
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "web-access@web-access": true,
+    "skill-creator@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": false
+  }
+}

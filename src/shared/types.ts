@@ -1,0 +1,398 @@
+export type TokenLevel = "low" | "medium" | "high";
+
+export type EnableSource = "global" | "project" | "default";
+export type PluginEnableSource = EnableSource;
+
+export type PluginInfo = {
+  id: string;
+  name: string;
+  marketplace: string;
+  description: string;
+  enabled: boolean;
+  enableSource: PluginEnableSource;
+  version: string;
+  installPath: string;
+  lastUpdated: string;
+  contentSizeBytes: number;
+  estimatedTokens: number;
+  baseEstimatedTokens: number;
+  activeEstimatedTokens: number;
+  tokenLevel: TokenLevel;
+  hasAgents: boolean;
+  hasSkills: boolean;
+  hasMcp: boolean;
+  hasCommands: boolean;
+  hasHooks: boolean;
+};
+
+export type PluginsResponse = {
+  plugins: PluginInfo[];
+  activeCount: number;
+  totalEstimatedTokens: number;
+};
+
+export type SkillSource = "user" | "plugin" | "project";
+
+export type CommandSource = "user" | "plugin" | "project";
+
+export type AgentSource = "user" | "plugin";
+
+export type AgentInfo = {
+  id: string;
+  name: string;
+  description: string;
+  source: AgentSource;
+  pluginId?: string;
+  pluginName?: string;
+  parentPluginEnabled: boolean;
+  installPath: string;
+  contentSizeBytes: number;
+  estimatedTokens: number;
+  tokenLevel: TokenLevel;
+};
+
+export type AgentsResponse = {
+  agents: AgentInfo[];
+  activeCount: number;
+  totalEstimatedTokens: number;
+};
+
+export type CommandInfo = {
+  id: string;
+  name: string;
+  description: string;
+  source: CommandSource;
+  pluginId?: string;
+  pluginName?: string;
+  parentPluginEnabled: boolean;
+  installPath: string;
+  contentSizeBytes: number;
+  estimatedTokens: number;
+  tokenLevel: TokenLevel;
+};
+
+export type CommandsResponse = {
+  commands: CommandInfo[];
+  activeCount: number;
+  totalEstimatedTokens: number;
+};
+
+export type SkillInfo = {
+  id: string;
+  name: string;
+  description: string;
+  source: SkillSource;
+  pluginId?: string;
+  pluginName?: string;
+  enabled: boolean;
+  enableSource: EnableSource;
+  parentPluginEnabled: boolean;
+  installPath: string;
+  contentSizeBytes: number;
+  estimatedTokens: number;
+  tokenLevel: TokenLevel;
+};
+
+export type SkillsResponse = {
+  skills: SkillInfo[];
+  activeCount: number;
+  totalEstimatedTokens: number;
+};
+
+export type HealthWarning = {
+  level: "info" | "warning" | "error";
+  message: string;
+  category: "cost" | "plugins" | "mcp" | "hooks";
+};
+
+export type TopPluginByCost = {
+  name: string;
+  estimatedTokens: number;
+  tokenLevel: TokenLevel;
+};
+
+export type HealthSummary = {
+  activePlugins: number;
+  totalPlugins: number;
+  activeMcpServers: number;
+  hookEventCount: number;
+  totalHookCommands: number;
+  estimatedTokensPerTurn: number;
+  tokenBudgetLevel: TokenLevel;
+  activeProfile: string | null;
+  contextWindowSize: number;
+};
+
+export type HealthResponse = {
+  scope: string | null;
+  summary: HealthSummary;
+  warnings: HealthWarning[];
+  topPluginsByCost: TopPluginByCost[];
+};
+
+export type ModelUsage = {
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  cacheReadTokens: number;
+  costUSD: number;
+};
+
+export type ProjectInfo = {
+  path: string;
+  name: string;
+  lastCost: number | null;
+  totalCostUSD: number | null;
+  modelUsage: ModelUsage[];
+  sessions: number;
+  hasSettings: boolean;
+  hasLocalSettings: boolean;
+  hasMcpJson: boolean;
+};
+
+export type ProjectsResponse = {
+  projects: ProjectInfo[];
+};
+
+export type SessionMeta = {
+  sessionId: string;
+  sessionName: string;
+  projectPath: string;
+  startTime: string;
+  durationMinutes: number;
+  userMessages: number;
+  assistantMessages: number;
+  toolCounts: Record<string, number>;
+  inputTokens: number;
+  outputTokens: number;
+  cacheCreationTokens: number;
+  cacheReadTokens: number;
+  costUSD: number;
+  firstPrompt: string;
+  gitCommits: number;
+  linesAdded: number;
+  linesRemoved: number;
+  filesModified: number;
+  usesMcp: boolean;
+  usesWebSearch: boolean;
+  usesTaskAgent: boolean;
+  toolErrors: number;
+  lastModelUsed: string;
+};
+
+export type SessionsResponse = {
+  sessions: SessionMeta[];
+  totalTokens: number;
+  totalSessions: number;
+};
+
+export type ProjectSettingsResponse = {
+  projectPath: string;
+  settings: Record<string, unknown> | null;
+  localSettings: Record<string, unknown> | null;
+  mcpServers: Record<string, unknown> | null;
+  effectiveConfig: {
+    permissions: { allow: string[] };
+    hooks: Record<string, unknown[]>;
+    enabledMcpServers: string[];
+  };
+};
+
+// --- Cost breakdown (per-category detail) ---
+
+export type CostBreakdown = {
+  inputTokens: number;
+  outputTokens: number;
+  cacheWriteTokens: number;
+  cacheReadTokens: number;
+  inputCostUSD: number;
+  outputCostUSD: number;
+  cacheWriteCostUSD: number;
+  cacheReadCostUSD: number;
+};
+
+// --- JSONL parser types ---
+
+export type TurnUsage = {
+  turnIndex: number;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  cacheCreationTokens: number;
+  cacheReadTokens: number;
+  costUSD: number;
+  totalContextSize: number;
+  userPrompt: string;
+  toolsUsed: string[];
+  timestamp: string;
+  durationMs: number;
+  contextAtStart: number;
+  toolOutputTokens: number;
+  apiCallCount: number;
+  inputCostUSD: number;
+  outputCostUSD: number;
+  cacheWriteCostUSD: number;
+  cacheReadCostUSD: number;
+};
+
+export type SessionAnalysis = {
+  sessionId: string;
+  sessionName: string;
+  projectPath: string;
+  turns: TurnUsage[];
+  totalCostUSD: number;
+  cacheHitRate: number;
+  contextGrowthRate: number;
+  peakContextSize: number;
+  systemPromptEstimate: number;
+  modelBreakdown: Record<
+    string,
+    { inputTokens: number; outputTokens: number; costUSD: number }
+  >;
+};
+
+// --- Cost analytics (per-session summary for client-side aggregation) ---
+
+export type SessionCostSummary = {
+  sessionId: string;
+  startTime: string;
+  firstPrompt: string;
+  costUSD: number;
+  cacheHitRate: number;
+  peakContextSize: number;
+  turnsCount: number;
+  modelBreakdown: Record<string, { costUSD: number }>;
+  systemPromptEstimate: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
+  totalToolOutputTokens: number;
+  totalContextGrowth: number;
+  contextSpikeCount: number;
+  contextSpikeToolPctSum: number;
+  totalCacheWriteTokens: number;
+  totalCacheReadTokens: number;
+  inputCostUSD: number;
+  outputCostUSD: number;
+  cacheWriteCostUSD: number;
+  cacheReadCostUSD: number;
+};
+
+export type ProjectAnalyticsResponse = {
+  sessions: SessionCostSummary[];
+  totalSessionCount: number;
+  pluginTokenEstimate: number;
+};
+
+// --- Plan limits types ---
+
+export type PlanLimits = {
+  sessionMessageLimit: number | null;  // messages (API calls) per 5hr window (~225 for Max 5x)
+  weeklyMessageLimit: number | null;   // messages per weekly window
+  sessionResetsAt: string | null;      // time-of-day "HH:MM" — auto-advances to next occurrence
+  weeklyResetsAt: string | null;       // ISO timestamp — auto-advances by 7 days when past
+};
+
+export type WindowedProjectUsage = {
+  name: string;
+  path: string;
+  messages: number;
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  estimatedCostUSD: number;
+  sessions: number;
+};
+
+export type UsageWindow = {
+  totalMessages: number;               // primary metric — API calls (rate-limited)
+  messageLimit: number | null;
+  messagePercentage: number | null;
+  totalInputTokens: number;
+  totalOutputTokens: number;
+  totalTokens: number;
+  totalEstimatedCostUSD: number;
+  totalSessions: number;
+  resetsInMs: number;                  // ms until window resets (0 if unknown)
+  projects: WindowedProjectUsage[];
+};
+
+export type WindowedUsageResponse = {
+  session: UsageWindow;
+  weekly: UsageWindow;
+  limits: PlanLimits;
+  pricingBasis: "per-model";
+};
+
+// --- Insights types ---
+
+export type Insight = {
+  id: string;
+  level: "info" | "warning" | "tip";
+  title: string;
+  message: string;
+  category: "context" | "cache" | "model" | "session" | "plugins";
+};
+
+// --- Hook types (shared for profiles) ---
+
+export type HookCommand = {
+  type: string;
+  command: string;
+  timeout?: number;
+};
+
+export type HookEntry = {
+  matcher: string;
+  hooks: HookCommand[];
+};
+
+export type HooksMap = Record<string, HookEntry[]>;
+
+// --- MCP Catalog types ---
+
+export type ContextWindowResponse = {
+  detected: number | null;
+  override: number | null;
+  effective: number;
+};
+
+export type McpOrigin = "global" | "global-disabled" | "plugin" | "project" | "personal" | "cloud";
+
+export type ProjectMcpStatus = "active" | "disabled" | "available";
+
+export type McpServerConfig = {
+  command?: string;
+  url?: string;
+  args?: string[];
+  env?: Record<string, string>;
+  type?: string;
+};
+
+export type McpCatalogEntry = {
+  name: string;
+  origin: McpOrigin;
+  pluginName?: string;
+  pluginNames?: string[];
+  sourceProject?: string;
+  config: McpServerConfig;
+  health: "connected" | "needs_auth" | "failed" | "unknown";
+  isPinned: boolean;
+  projectStatus?: ProjectMcpStatus;
+};
+
+export type McpCatalogGroup = {
+  label: string;
+  origin: McpOrigin;
+  pluginName?: string;
+  entries: McpCatalogEntry[];
+};
+
+export type CatalogResponse = {
+  scope: "global" | "project";
+  groups: McpCatalogGroup[];
+  active?: McpCatalogGroup[];
+  disabled?: McpCatalogGroup[];
+  available?: McpCatalogGroup[];
+  totalCount: number;
+  connectedCount: number;
+};
